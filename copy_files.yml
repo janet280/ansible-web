@@ -1,0 +1,20 @@
+- name: Copy files to EC2 and run commands
+  hosts: webservers
+  gather_facts: false
+  tasks:
+    - name: Copy files to remote host
+      copy:
+        src: /Users/cargill/projects/professional-card-astro/dist
+        dest: /tmp/
+        mode: 0644
+        force: yes
+    - name: Copy files from source to destination
+      become: yes
+      copy:
+        src: /tmp/dist/{{ item }}
+        dest: /usr/share/nginx/html/{{ item }}
+        remote_src: yes
+        force: yes
+      with_items:
+        - files/Resume.pdf
+        - index.html
